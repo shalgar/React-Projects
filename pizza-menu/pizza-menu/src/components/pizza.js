@@ -1,12 +1,10 @@
-function Pizza(props){
-   const pizza = props.pizzaObj;
-   console.log(pizza.photoName);
+function Pizza({pizza}){
    return (
-      <div className="pizza">
+      <div className={`pizza ${pizza.soldOut ? 'sold-out' :''}`}>
         <img src={pizza.photoName} alt={pizza.name}/>
         <h3>{pizza.name}</h3>
         <p>{pizza.ingredients}</p>
-        <span>{pizza.price}</span>
+        <span>{pizza.soldOut?'SOLD OUT':pizza.price}</span>
       </div>
    )
 }

@@ -50,7 +50,7 @@ function Menu(){
         <h2>Our Menu</h2>
         <ul className='pizzas'>
         {pizzaData.map(
-            pizza => <Pizza pizzaObj={pizza} key={pizza.name}></Pizza>
+            pizza => <Pizza pizza={pizza} key={pizza.name}></Pizza>
         )}
         </ul>
        
