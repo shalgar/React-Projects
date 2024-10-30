@@ -13,7 +13,7 @@ function Counter(){
   const [step,setStep] = useState(1)
   const [count,setCount] = useState(1)
 
-  const daysMultiplier = step * count;
+  const daysMultiplier = count !==0 ?(step * count) : 1;
 
   function handleStepChange(e){
     setStep(Number(e.target.value));
@@ -41,7 +41,7 @@ function Counter(){
 
   function handleReset(){
     setCount(0);
-    setStep(0);
+    setStep(1);
   }
 
   return (
@@ -66,7 +66,11 @@ function Counter(){
         <button onClick={handleIncreaseCount}>+</button>
       </div>
       <p>{daysMultiplier} days from today is {getFutureDate()}</p>
-      <button onClick={handleReset}>Reset</button>
+
+      { count !== 0 || step !==1 ?
+          (<button onClick={handleReset}>Reset</button>): null
+      }
+    
     </>
   );
 }
