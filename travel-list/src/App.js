@@ -1,17 +1,17 @@
 import { useState } from "react"; 
  
- const initialItems = [
-  { id: 1, description: "Passports", quantity: 2, packed: true },
-  { id: 2, description: "Socks", quantity: 12, packed: false },
-];
-
-
 function App() {
+  const [items, setItems] = useState([])
+
+  function handleAddItems(item){
+    setItems((items) => [...items,item])
+  }
+
   return (
     <div className="app">
       <Logo/>
-      <Form/>
-      <PackingList/>
+      <Form onAddItem ={handleAddItems}/>
+      <PackingList items = {items}/>
       <Stats/>
     </div>
   )
@@ -23,16 +23,16 @@ function Logo() {
   )
 }
 
-function Form() {
+function Form({onAddItem}) {
   const [itemDesc, setItemDesc] = useState("")
   const [itemQuantity, setItemQuantity] = useState(1)
 
   function handleSubmit(e){
     e.preventDefault();
     if(!itemDesc) return;
-    
-    const newItem = {itemDesc,itemQuantity,packed:false, id:Date.now()};
 
+    const newItem = {itemDesc,itemQuantity,packed:false, id:Date.now()};
+    onAddItem(newItem);
     setItemDesc('');
     setItemQuantity(1);
   }
@@ -57,20 +57,21 @@ function Form() {
   )
 }
 
-function PackingList() {
+function PackingList({items}) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map(item => <Item item = {item}/>)}
+        {items.map(item => <Item key={item.id} item = {item}/>)}
       </ul>
     </div>
   )
 }
 
 function Item({item}){
+  console.log(item);
   return (
     <li style={item.packed ? {textDecoration:'line-through'}:{}}>
-      <span>{item.quantity} {item.description}</span>
+      <span>{item.itemQuantity} {item.itemDesc}</span>
     </li>
   )
 }
