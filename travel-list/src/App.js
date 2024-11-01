@@ -1,5 +1,8 @@
 import { useState } from "react"; 
- 
+import Logo from './components/Logo';
+import PackingList from './components/Packing_List';
+import Stats from './components/Stats';
+import Form from './components/Form';
 function App() {
   const [items, setItems] = useState([])
 
@@ -7,80 +10,39 @@ function App() {
     setItems((items) => [...items,item])
   }
 
+  function handleDeleteItem(id){
+    setItems((items) => items.filter(item => item.id !== id))
+  }
+
+  function handleToggleItem(id){
+    setItems(
+      (items) => items.map(
+        (item) => item.id === id ? (
+          {...item, packed:!item.packed}
+        )
+        : item
+      )
+    )
+  }
+
+  function handleClear(){
+    const confirmed = window.confirm('Are you sure? This will delete all the items.');
+    if(confirmed)setItems([]);
+  }
+
   return (
     <div className="app">
       <Logo/>
       <Form onAddItem ={handleAddItems}/>
-      <PackingList items = {items}/>
-      <Stats/>
-    </div>
-  )
-}
-
-function Logo() {
-  return (
-    <h1 className="logo">🌴Far Away!🎒</h1>
-  )
-}
-
-function Form({onAddItem}) {
-  const [itemDesc, setItemDesc] = useState("")
-  const [itemQuantity, setItemQuantity] = useState(1)
-
-  function handleSubmit(e){
-    e.preventDefault();
-    if(!itemDesc) return;
-
-    const newItem = {itemDesc,itemQuantity,packed:false, id:Date.now()};
-    onAddItem(newItem);
-    setItemDesc('');
-    setItemQuantity(1);
-  }
-
-  return (
-    <form className="add-form" onSubmit={handleSubmit}>
-      <h3>What do you need 😍 for the trip?</h3>
-      <select value={itemQuantity} onChange={(e)=>setItemQuantity(Number(e.target.value))}>
-        {Array.from({length:20}, (_,i) =>i+1).map(
-          (num)=>
-            <option value={num} key={num}>{num}</option>
-        )}
-      </select>
-      <input 
-        type="text" 
-        placeholder="items..." 
-        value={itemDesc} 
-        onChange={(e) =>setItemDesc(e.target.value)}
+      <PackingList 
+        items = {items} 
+        onDeleteItem = {handleDeleteItem} 
+        onToggleItem = {handleToggleItem}
+        onClearItems = {handleClear}
       />
-      <button>Add</button>
-    </form>
-  )
-}
-
-function PackingList({items}) {
-  return (
-    <div className="list">
-      <ul>
-        {items.map(item => <Item key={item.id} item = {item}/>)}
-      </ul>
+      <Stats items = {items}/>
     </div>
   )
 }
 
-function Item({item}){
-  console.log(item);
-  return (
-    <li style={item.packed ? {textDecoration:'line-through'}:{}}>
-      <span>{item.itemQuantity} {item.itemDesc}</span>
-    </li>
-  )
-}
-
-function Stats() {
-  return (
-    <footer className="stats">
-       <em>You Have Packed X items (X%)</em>
-    </footer>
-  )
-}
 export default App;
